@@ -9,8 +9,6 @@ import {
 } from 'react-native-responsive-screen';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
-import TouchID from 'react-native-touch-id';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {UserContext} from '../../context/user';
 import Layout from '../../components/layout';
@@ -19,14 +17,7 @@ import GradientHeader from '../../shared-components/gradient-elements/gradient-h
 import FormButton from '../../shared-components/button/form-button';
 import Input from '../../shared-components/input/input';
 import SkewWrapper from '../../shared-components/skew-wrapper/skew-wrapper';
-import {useLogin} from '../../hooks/useUserData';
 import {Loader, LoaderWrapper} from '../../shared-components/loader';
-import AlertModal from '../../shared-components/popups/alertModal';
-import {setUserToken} from '../../utils/token-manager';
-import {setAuthToken} from '../../utils/api';
-import SocialLogin from '../../components/social-login/social-login';
-import {google, facebook} from 'react-native-simple-auth';
-import Seperator from '../../components/seperator/seperator';
 
 const loginSchema = yup.object({
     username: yup
@@ -45,45 +36,6 @@ const Login = ({navigation}) => {
     const [errMsgs, setErrMsgs] = useState('');
     const [bioMetricModal, setBioMetricModal] = useState(false);
 
-    const authUser = type => {
-        switch (type) {
-            case 'google':
-                google({
-                    appId: '846432049349-i55a9rb0s0qhv6k0mrrfgh5i23c6tmef.apps.googleusercontent.com',
-                    callback: 'com.talent.ibex:/login',
-                })
-                    .then(info => {
-                        Login({
-                            platform: 'google',
-                            mobile: true,
-                            id: info.user.id,
-                            access_token: info.credentials.access_token,
-                        });
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-
-            case 'facebook':
-                facebook({
-                    appId: '3321050008144642',
-                    callback: 'fb3321050008144642://authorize',
-                    fields: ['email'], // you can override the default fields here
-                })
-                    .then(info => {
-                        Login({
-                            platform: 'facebook',
-                            mobile: true,
-                            id: info.user.id,
-                            access_token: info.credentials.access_token,
-                        });
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-        }
-    };
-
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -94,71 +46,6 @@ const Login = ({navigation}) => {
             onLogin(values);
         },
     });
-
-    const {mutate: Login, isLoading} = useLogin({
-        onSuccess: async data => {
-            if (data.status === 200) {
-                const {token} = data?.data?.data?.details;
-                const userData = {
-                    id: data?.data?.data?.details?.id,
-                    email: data?.data?.data?.details?.other_information?.info
-                        ?.email,
-                    name: data?.data?.data?.details?.other_information?.info
-                        ?.full_name,
-                    phone: data?.data?.data?.details?.other_information?.info
-                        ?.phone,
-                    avatar: data?.data?.data?.details?.other_information?.info
-                        ?.avatar,
-                    password: formik.values.password,
-                };
-                formik.resetForm();
-                setAuthToken(token);
-                setUserToken({token, userData});
-                dispatchUser({
-                    type: 'SET_USER',
-                    user: {
-                        ...userData,
-                        token,
-                        profile: {
-                            ...userData,
-                        },
-                        loggedIn: true,
-                    },
-                });
-            }
-        },
-        onError: ({response}) => {
-            setErrModal(true);
-            setErrMsgs(response?.data?.message);
-        },
-    });
-
-    const onLogin = async v => {
-        await Login({username: v.username, password: v.password});
-    };
-
-    const checkBioFirstLogin = async () => {
-        const jsonValue = await AsyncStorage.getItem('@biometricToken');
-        const res = jsonValue != null ? JSON.parse(jsonValue) : null;
-        if (res && Object.keys(res).length !== 0) {
-            let fingerprintLableForOS =
-                Platform.OS == 'ios' ? 'Touch/Face ID' : 'Fingerprint';
-            TouchID.authenticate(
-                'Login to talentibex using ' + fingerprintLableForOS,
-            )
-                .then(success => {
-                    Login({
-                        username: res[0].userEmail,
-                        password: res[0].userPassword,
-                    });
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        } else {
-            setBioMetricModal(true);
-        }
-    };
 
     const headerOptions = {
         noSkew: true,
@@ -252,47 +139,14 @@ const Login = ({navigation}) => {
                 <Layout noScroll footer bgColor={color.white}>
                     <FooterBtnWrap>
                         <FormButton
-                            bgColor={color.lightest_gray}
-                            btnWidth="29%"
-                            iconSize={30}
-                            iconButton
-                            iconName="fingerprint"
-                            onClick={() => checkBioFirstLogin()}
-                        />
-                        <FormButton
                             btnText="Login"
-                            btnWidth="69%"
+                            btnWidth="100%"
                             onClick={formik.handleSubmit}
                         />
                     </FooterBtnWrap>
                 </Layout>
             </KeyboardAvoidingView>
 
-            <AlertModal
-                title="Enable Biometric"
-                text="Please login using your Login Id and Password then go to Settings to enable fingerprint login."
-                btnText="Ok"
-                errModal
-                isVisible={bioMetricModal}
-                onClickBtn={() => {
-                    setBioMetricModal(false);
-                }}
-            />
-            <AlertModal
-                title="Request Failed"
-                text={errMsgs}
-                btnText="Retry"
-                errModal
-                isVisible={errModal}
-                onClickBtn={() => {
-                    setErrModal(false);
-                }}
-            />
-            {isLoading && (
-                <LoaderWrapper>
-                    <Loader size={wp('12%')} />
-                </LoaderWrapper>
-            )}
         </>
     );
 };
