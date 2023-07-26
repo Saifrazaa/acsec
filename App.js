@@ -18,7 +18,7 @@ const App = () => {
     configureFontAwesomePro('light');
     configureFontAwesomePro('solid');
     const [user, dispatchUser] = useReducer(userReducer, []);
-    const [getStarted, setGetStarted] = useState(false);
+    const [getStarted, setGetStarted] = useState(true);
     const [loading, setLoading] = useState(false);
 
     const getStartedToken = async () => {
@@ -37,7 +37,7 @@ const App = () => {
     };
 
     useEffect(() => {
-        getStartedToken();
+        // getStartedToken();
 
         setTimeout(() => {
             setLoading(false);

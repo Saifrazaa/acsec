@@ -19,24 +19,21 @@ const getStarted = [
     {
         id: 1,
         image: require('../../assets/images/get-started-img-1.png'),
-        title: 'Make your dream career with',
-        logoText: 'ibex.',
-        para: 'We help you to find your dream job according to your skillset, location & preference to build your career',
+        title: 'Create Your Schedule',
+        para: 'Make your important schedule well organized to make your work easier later.',
     },
     {
         id: 2,
         image: require('../../assets/images/get-started-img-2.png'),
-        title: 'Get to know more about',
-        logoTextPre: 'talent',
-        logoText: 'ibex.',
-        para: 'We help you to find your dream job according to your skillset, location & preference to build your career.',
+        title: 'Easily Manage Tasks With',
+        logoTextPre: 'ACSEC',
+        para: 'You can easily organize your work and schedule properly so that you are more comfortable while doing work',
     },
     {
         id: 3,
         image: require('../../assets/images/get-started-img-3.png'),
-        title: 'Get register today with',
-        logoTextPre: 'talent',
-        logoText: 'ibex.',
+        title: 'Ready? Start Your Day',
+        para:'And after all your schedule has been arranged properly and neatly, now you are ready to start the day with fun Enjoy your day.'
     },
 ];
 
@@ -66,7 +63,7 @@ const Onboarding = ({navigation}) => {
                 <GradientHeader noInnerMargin>
                     <HeaderWrap>
                         <LogoImg
-                            source={require('../../assets/images/talentibex-logo.png')}
+                            source={require('../../assets/images/logo.png')}
                         />
                         {getStarted.map((item, index) => {
                             return (
@@ -178,8 +175,8 @@ const BannerImg = styled.Image`
 `;
 
 const LogoImg = styled.Image`
-    width: ${wp('45%')}px;
-    height: ${wp('12%')}px;
+    width: ${wp('35%')}px;
+    height: ${wp('8%')}px;
     resize-mode: contain;
     margin-top: ${wp('8%')}px;
     margin-bottom: ${wp('2%')}px;

@@ -72,7 +72,7 @@ const Login = ({navigation}) => {
                         <HeaderWrap>
                             <PreHeading>Login to</PreHeading>
                             <LogoImg
-                                source={require('../../assets/images/talentibex-logo.png')}
+                                source={require('../../assets/images/logo.png')}
                             />
                         </HeaderWrap>
                     </GradientHeader>
@@ -159,8 +159,8 @@ const HeaderWrap = styled.SafeAreaView`
 `;
 
 const LogoImg = styled.Image`
-    width: ${wp('60%')}px;
-    height: ${wp('12%')}px;
+    width: ${wp('30%')}px;
+    height: ${wp('15%')}px;
     resize-mode: contain;
     margin-top: ${wp('1%')}px;
 `;

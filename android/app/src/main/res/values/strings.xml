@@ -1,0 +1,14 @@
+<resources>
+	<string name="app_name">
+		ACSEC
+	</string>
+	<string name="facebook_app_id">
+		3321050008144642
+	</string>
+	<string name="fb_login_protocol_scheme">
+		fb3321050008144642
+	</string>
+	<string name="facebook_client_token">
+		30e030034b207a9dc4c81f4dd57db920
+	</string>
+</resources>

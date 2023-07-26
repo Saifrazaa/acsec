@@ -30,7 +30,7 @@ const TitleWrapper = styled.View``;
 
 const Title = styled.Text`
     color: ${color.headingColor};
-    font-size: ${sizes.font38};
+    font-size: ${sizes.font30};
     font-family: ${fonts.GilroyBold};
     letter-spacing: -0.5px;
     line-height: ${parseInt(sizes.font38) * 1.27}px;
@@ -38,14 +38,14 @@ const Title = styled.Text`
 `;
 
 const LogoTextPre = styled.Text`
-    font-size: ${sizes.font38};
+    font-size: ${sizes.font30};
     font-family: ${fonts.AxiformaLight};
     color: ${color.light_grey};
     margin-right: ${wp('1%')}px;
 `;
 
 const LogoText = styled.Text`
-    font-size: ${sizes.font38};
+    font-size: ${sizes.font30};
     font-family: ${fonts.AxiformaBold};
     color: ${color.primary};
 `;
