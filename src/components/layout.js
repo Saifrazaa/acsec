@@ -91,14 +91,10 @@ const Layout = ({
 const MainWrapper = styled.View`
     background-color: ${props =>
         props.bgColor ? props.bgColor : color.app_bg};
-    ${props => {
-        if (!props.bottomEl) {
-            return `flex: 1 0`;
-        } else {
-            return `background-color: transparent`;
-        }
-    }};
+    flex: 1 0;
 `;
+
+const Body = styled.View``;
 
 const FooterWrap = styled.View`
     elevation: 4;

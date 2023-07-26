@@ -5,8 +5,9 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {Platform} from 'react-native';
+import {color} from '../helper';
 
-const GradientHeader = ({
+const Header = ({
     children,
     noBorder,
     imgSrc,
@@ -18,10 +19,7 @@ const GradientHeader = ({
         <Wrapper
             noSkew={noSkew}
             noBorder={noBorder}
-            noMarginBottom={noMarginBottom}
-            source={
-                imgSrc ? imgSrc : require('../../assets/images/gradient2.png')
-            }>
+            noMarginBottom={noMarginBottom}>
             {imgSrc !== undefined && !noOverlay && imgSrc ? (
                 <DarkGradient
                     noSkew={noSkew}
@@ -35,41 +33,17 @@ const GradientHeader = ({
     );
 };
 
-const Wrapper = styled.ImageBackground`
+const Wrapper = styled.View`
     width: 100%;
-    ${props => {
-        if (!props.noBorder) {
-            return `
-                border-bottom-left-radius: ${wp('8%')}px;
-                border-bottom-right-radius: ${wp('8%')}px;`;
-        }
-    }}
     overflow: hidden;
-    ${Platform.OS === 'ios' &&
-    `transform: skewY(5deg); margin-top: -15px; margin-bottom: 15px`};
-    ${props =>
-        props.noMarginBottom && Platform.OS === 'ios' && 'margin-bottom: 0px'}
-    ${props => {
-        if (props.noSkew && Platform.OS === 'ios') {
-            return `
-                transform:skewY(0deg);
-            `;
-        }
-    }}
+    background-color: ${color.primary};
+    margin-bottom: 20px;
+    padding-top: 20px;
 `;
 
-const DarkGradient = styled.ImageBackground`
+const DarkGradient = styled.View`
     width: 100%;
     overflow: hidden;
-    ${Platform.OS === 'ios' &&
-    `transform: skewY(-5deg); margin-bottom: -15px;`};
-    ${props => {
-        if (props.noSkew && Platform.OS === 'ios') {
-            return `
-                transform:skewY(0deg)
-            `;
-        }
-    }}
 `;
 
 const InnerGradient = styled.View`
@@ -77,16 +51,7 @@ const InnerGradient = styled.View`
 `;
 
 const InnerWrapper = styled.View`
-    ${Platform.OS === 'ios' && `transform: skewY(-5deg)`};
-    margin: ${props =>
-        props.noInnerMargin ? '0' : `0 ${wp('7%')}px ${wp('5%')}px`};
-    ${props => {
-        if (props.noSkew && Platform.OS === 'ios') {
-            return `
-                transform:skewY(0deg)
-            `;
-        }
-    }}
+    margin: 0 ${wp('7%')}px ${wp('5%')}px;
 `;
 
-export default GradientHeader;
+export default Header;

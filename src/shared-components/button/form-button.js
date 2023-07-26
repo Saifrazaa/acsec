@@ -43,8 +43,7 @@ const FormBtnText = styled.Text`
     font-family: ${fonts.GilroyBold};
 `;
 const ButtonBg = styled.TouchableOpacity`
-    background-color: ${props =>
-        props.bgColor ? props.bgColor : color.primary};
+    background-color: ${color.primary};
     width: ${props => (props.btnWidth ? props.btnWidth : 'auto')};
     height: ${props => (props.btnHeight ? props.btnHeight : `${wp('15%')}px`)};
     justify-content: center;

@@ -10,7 +10,7 @@ export const mobileScreen = deviceWidth < 600;
 // C O L O R S
 export const color = {
     app_bg: '#F9F9F9',
-    primary: '#FA0060',
+    primary: 'grey',
     black: '#131313',
     headingColor: '#292D32',
     white: '#ffffff',

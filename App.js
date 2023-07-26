@@ -1,15 +1,15 @@
 import 'react-native-gesture-handler';
-import React, { useReducer, useEffect, useState } from 'react';
-import { LogBox, StatusBar, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import React, {useReducer, useEffect, useState} from 'react';
+import {LogBox, StatusBar, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { configureFontAwesomePro } from 'react-native-fontawesome-pro';
+import {QueryClient, QueryClientProvider} from 'react-query';
+import {configureFontAwesomePro} from 'react-native-fontawesome-pro';
 import SplashScreen from 'react-native-splash-screen';
 
-import { Auth } from './src/routes/main-routes';
-import { UserContext, userReducer } from './src/context/user';
-import { color } from './src/shared-components/helper';
+import {Auth, AppRoute} from './src/routes/main-routes';
+import {UserContext, userReducer} from './src/context/user';
+import {color} from './src/shared-components/helper';
 
 const queryClient = new QueryClient();
 const App = () => {
@@ -37,16 +37,12 @@ const App = () => {
     };
 
     useEffect(() => {
-        // getStartedToken();
-
+        getStartedToken();
         setTimeout(() => {
             setLoading(false);
             SplashScreen.hide();
         }, 3000);
-
-        // deleteGetStartedToken();
     }, []);
-
 
     return (
         <>
@@ -58,14 +54,19 @@ const App = () => {
                         backgroundColor={'transparent'}
                     />
                     <QueryClientProvider client={queryClient}>
-                        <UserContext.Provider value={{ user, dispatchUser }}>
+                        <UserContext.Provider value={{user, dispatchUser}}>
                             <NavigationContainer>
                                 <View
                                     style={{
                                         backgroundColor: color.app_bg,
                                         flex: 1,
+                                        marginTop: -15,
                                     }}>
-                                    <Auth isNew={getStarted} />
+                                    {user['loggedIn'] ? (
+                                        <AppRoute />
+                                    ) : (
+                                        <Auth isNew={getStarted} />
+                                    )}
                                 </View>
                             </NavigationContainer>
                         </UserContext.Provider>

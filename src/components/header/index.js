@@ -1,6 +1,5 @@
 import React from 'react';
-import GradientHeader from '../../shared-components/gradient-elements/gradient-header';
-import HeaderWithBg from './header-with-bg';
+import Header from '../../shared-components/gradient-elements/gradient-header';
 import HeaderWithText from './header-with-text';
 
 const MainHeader = ({headerOptions}) => {
@@ -17,15 +16,13 @@ const MainHeader = ({headerOptions}) => {
             ? {uri: featuredProgramme.featured_image}
             : imgSrc;
     return (
-        <GradientHeader
+        <Header
             noBorder={noBorder}
             noSkew={noSkew}
             imgSrc={featured_image}
             noMarginBottom={noMarginBottom}>
-            {(programmePage && (
-                <HeaderWithBg headerOptions={headerOptions} />
-            )) || <HeaderWithText headerOptions={headerOptions} />}
-        </GradientHeader>
+            <HeaderWithText headerOptions={headerOptions} />
+        </Header>
     );
 };
 
