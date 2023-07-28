@@ -57,26 +57,29 @@ const Signup = ({navigation}) => {
     };
 
     const onSignup = () => {
-        console.log(formik.values.username);
         database()
             .ref(`/users/${formik.values.phone_no}`)
             .set({
                 full_name: formik.values.full_name,
                 email: formik.values.username,
                 password: formik.values.password,
+                phone_no: formik.values.phone_no,
             })
             .then(() => {
                 setUserToken({
-                    full_name: formik.values.full_name,
-                    username: formik.values.username,
+                    username: formik.values.full_name,
                     password: formik.values.password,
+                    email: formik.values.username,
+                    phone_no: formik.values.phone_no,
                 });
                 dispatchUser({
                     type: 'SET_USER',
                     user: {
                         loggedIn: true,
-                        full_name: formik.values.formik,
-                        email: formik.values.email,
+                        full_name: formik.values.full_name,
+                        email: formik.values.username,
+                        password: formik.values.password,
+                        phone_no: formik.values.phone_no,
                     },
                 });
             });

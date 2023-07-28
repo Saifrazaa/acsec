@@ -46,6 +46,8 @@ const App = () => {
                     user: {
                         username: res.username,
                         password: res.password,
+                        full_name: res.full_name,
+                        phone_no: res.phone_no,
                         loggedIn: true,
                     },
                 });

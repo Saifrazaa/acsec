@@ -11,6 +11,8 @@ import Onboarding from '../pages/onboarding/onboarding';
 import Home from '../pages/home/home';
 import Logout from '../pages/auth/logout';
 import Signup from '../pages/auth/signup';
+import AddActivity from '../pages/activity/add-activity';
+import Graph from '../pages/graph/graph';
 
 // stack for non-logged in users
 const AuthStack = createStackNavigator();
@@ -49,6 +51,8 @@ export function AppRoute({}) {
         <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={Home} />
             <Drawer.Screen name="Settings" component={Home} />
+            <Drawer.Screen name="AddActivity" component={AddActivity} />
+            <Drawer.Screen name="Graph" component={Graph} />
             <Drawer.Screen name="Logout" component={Logout} />
         </Drawer.Navigator>
     );

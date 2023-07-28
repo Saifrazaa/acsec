@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {KeyboardAvoidingView, TouchableOpacity} from 'react-native';
 import {Platform, View} from 'react-native';
 
@@ -16,26 +16,28 @@ import {color, fonts, sizes} from '../../shared-components/helper';
 import FormButton from '../../shared-components/button/form-button';
 import Input from '../../shared-components/input/input';
 import {setUserToken} from '../../utils/token-manager';
+import database from '@react-native-firebase/database';
+import AlertModal from '../../shared-components/popups/alertModal';
 
 const loginSchema = yup.object({
     username: yup
         .string()
-        .required('Email or Phone number is required')
-        .matches(
-            /^[a-zA-Z0-9@_.-]*$/,
-            'Sorry, only letters (a-z), number (0-9), and periods (.) are allowed',
-        ),
+        .required('Phone number is required')
+        .matches(/^[0-9]*$/, 'Sorry, number (0-9) are required.'),
     password: yup.string().required('Password is required'),
 });
 
 const Login = ({navigation}) => {
     const {user, dispatchUser} = useContext(UserContext);
+    const [errModal, setErrModal] = useState(false);
+    const [errMsgs, setErrMsgs] = useState('');
+
     const formik = useFormik({
         initialValues: {
             username: '',
             password: '',
         },
-        // validationSchema: loginSchema,
+        validationSchema: loginSchema,
         onSubmit: values => {
             onLogin(values);
         },
@@ -47,16 +49,35 @@ const Login = ({navigation}) => {
     };
 
     const onLogin = () => {
-        setUserToken({
-            username: formik.values.username,
-            password: formik.values.password,
-        });
-        dispatchUser({
-            type: 'SET_USER',
-            user: {
-                loggedIn: true,
-            },
-        });
+        database()
+            .ref(`/users/${formik.values.username}`)
+            .once('value')
+            .then(snapshot => {
+                const value = snapshot.val();
+                if (value !== null) {
+                    if (value.password === formik.values.password) {
+                        setUserToken({
+                            phone_no: formik.values.username,
+                            password: formik.values.password,
+                        });
+                        dispatchUser({
+                            type: 'SET_USER',
+                            user: {
+                                loggedIn: true,
+                                phone_no: formik.values.username,
+                            },
+                        });
+                    } else {
+                        setErrModal(true);
+                        setErrMsgs(
+                            'Your Phone Number and Password does not match.',
+                        );
+                    }
+                } else {
+                    setErrModal(true);
+                    setErrMsgs('No account found with this phone number.');
+                }
+            });
     };
 
     return (
@@ -71,8 +92,8 @@ const Login = ({navigation}) => {
                         {/* Login Form Fields */}
                         <LoginForm>
                             <Input
-                                placeholder="Enter your email or phone"
-                                label="Email or Phone"
+                                placeholder="Enter your Phone"
+                                label="Phone"
                                 value={formik.values.username}
                                 onValueChange={value =>
                                     formik.setFieldValue('username', value)
@@ -122,6 +143,16 @@ const Login = ({navigation}) => {
                     </FooterBtnWrap>
                 </Layout>
             </KeyboardAvoidingView>
+            <AlertModal
+                title="Oops, Something went wrong!"
+                text={errMsgs ?? "Can't login right now"}
+                btnText="OK"
+                errModal
+                isVisible={errModal}
+                onClickBtn={() => {
+                    setErrModal(false);
+                }}
+            />
         </>
     );
 };

@@ -1,66 +1,50 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import Layout from '../../components/layout';
 import FormButton from '../../shared-components/button/form-button';
 import styled from 'styled-components';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {color, fonts, sizes} from '../../shared-components/helper';
+import database from '@react-native-firebase/database';
+import {UserContext} from '../../context/user';
+import moment from 'moment';
 
 const Home = ({navigation}) => {
+    const [activities, setActivities] = useState([]);
+    const {user} = useContext(UserContext);
     const headerOptions = {
         heading: 'Home',
-        subHeading:
-            'You can view your activities list here and manage according to the completion of the activity.',
+        subHeading: 'Here is the list of your today activities.',
         drawerBtn: true,
     };
-    const activities = [
-        {
-            title: 'Dummy Activity 1',
-            status: 'Completed',
-            deadline: '22 Aug, 2024',
-        },
-        {
-            title: 'Dummy Activity 2',
-            status: 'In-Complete',
-            deadline: '22 Aug, 2024',
-        },
-        {
-            title: 'Dummy Activity 2',
-            status: 'In-Complete',
-            deadline: '22 Aug, 2024',
-        },
-        {
-            title: 'Dummy Activity 2',
-            status: 'In-Complete',
-            deadline: '22 Aug, 2024',
-        },
-        {
-            title: 'Dummy Activity 2',
-            status: 'In-Complete',
-            deadline: '22 Aug, 2024',
-        },
-        {
-            title: 'Dummy Activity 2',
-            status: 'In-Complete',
-            deadline: '22 Aug, 2024',
-        },
-        {
-            title: 'Dummy Activity 2',
-            status: 'In-Complete',
-            deadline: '22 Aug, 2024',
-        },
-    ];
+
+    useEffect(() => {
+        database()
+            .ref(`activities/${user.phone_no}`)
+            .once('value')
+            .then(snapshot => {
+                const arr = [];
+                snapshot.forEach(activity => {
+                    const data = {
+                        ...activity.val(),
+                        key: activity.key,
+                    };
+                    arr.push(data);
+                });
+                setActivities(arr);
+            });
+    }, []);
     return (
         <>
             <Layout withHeader headerOptions={headerOptions}>
-                <Heading>My Activities:</Heading>
+                <Heading>Today's Activities:</Heading>
                 <ListWrapper>
-                    {activities?.length &&
+                    {activities &&
                         activities.map((item, index) => {
                             return (
                                 <ListItem key={index}>
                                     <View>
-                                        <Label>{item.title}</Label>
+                                        <Label>{item?.activity}</Label>
                                         <Status>
                                             Status:{' '}
                                             <Text
@@ -68,13 +52,27 @@ const Home = ({navigation}) => {
                                                     fontFamily:
                                                         fonts.GilroySemiBold,
                                                 }}>
-                                                {item.status}
+                                                {item.completed
+                                                    ? 'Completed'
+                                                    : 'In-Complete'}
+                                            </Text>
+                                        </Status>
+                                        <Status>
+                                            Type:{' '}
+                                            <Text
+                                                style={{
+                                                    fontFamily:
+                                                        fonts.GilroySemiBold,
+                                                }}>
+                                                {item.type}
                                             </Text>
                                         </Status>
                                     </View>
                                     <View>
                                         <CompletionDate>
-                                            <Status>{item.deadline}</Status>
+                                            <Status>
+                                                {moment(item.date).format('ll')}
+                                            </Status>
                                         </CompletionDate>
                                     </View>
                                 </ListItem>
@@ -84,7 +82,11 @@ const Home = ({navigation}) => {
             </Layout>
             <Layout noScroll footer bgColor={color.white}>
                 <FooterBtnWrap>
-                    <FormButton btnText="Add New Activity" btnWidth="100%" />
+                    <FormButton
+                        btnText="Add New Activity"
+                        btnWidth="100%"
+                        onClick={() => navigation.navigate('AddActivity')}
+                    />
                 </FooterBtnWrap>
             </Layout>
         </>
@@ -111,6 +113,7 @@ const ListItem = styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
+    background-color: ${color.white['100']};
 `;
 
 const Label = styled.Text`
