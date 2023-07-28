@@ -1,4 +1,4 @@
-package com.talent.ibex.newarchitecture;
+package com.acsec.project.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.talent.ibex.BuildConfig;
-import com.talent.ibex.newarchitecture.components.MainComponentsRegistry;
-import com.talent.ibex.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.acsec.project.BuildConfig;
+import com.acsec.project.newarchitecture.components.MainComponentsRegistry;
+import com.acsec.project.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

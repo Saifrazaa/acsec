@@ -1,4 +1,4 @@
-package com.talent.ibex.newarchitecture.modules;
+package com.acsec.project.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

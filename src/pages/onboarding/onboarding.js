@@ -33,7 +33,7 @@ const getStarted = [
         id: 3,
         image: require('../../assets/images/get-started-img-3.png'),
         title: 'Ready? Start Your Day',
-        para:'And after all your schedule has been arranged properly and neatly, now you are ready to start the day with fun Enjoy your day.'
+        para: 'And after all your schedule has been arranged properly and neatly, now you are ready to start the day with fun Enjoy your day.',
     },
 ];
 
@@ -75,7 +75,7 @@ const Onboarding = ({navigation}) => {
                                     style={{
                                         opacity: index === currentIndex ? 1 : 0,
                                         position: 'absolute',
-                                        bottom: wp('-4%'),
+                                        bottom: wp('-18%'),
                                         width: wp('95%'),
                                         height: hp('43%'),
                                     }}>
@@ -130,7 +130,6 @@ const Onboarding = ({navigation}) => {
                         <FormButton
                             btnText="Skip"
                             bgColor={color.lightest_gray}
-                            color={color.black}
                             btnWidth="100%"
                             onClick={() => {
                                 setGetStartedToken('startedApp');
@@ -163,14 +162,14 @@ const Onboarding = ({navigation}) => {
 const HeaderWrap = styled.SafeAreaView`
     flex: 1 0;
     align-items: center;
-    min-height: ${hp('57%')}px;
+    min-height: ${hp('50%')}px;
     margin-bottom: -15px;
     ${Platform.OS === 'android' && `padding-top: ${StatusBar.currentHeight}px`}
 `;
 
 const BannerImg = styled.Image`
     width: ${wp('95%')}px;
-    height: ${hp('43%')}px;
+    height: ${hp('35%')}px;
     resize-mode: contain;
 `;
 

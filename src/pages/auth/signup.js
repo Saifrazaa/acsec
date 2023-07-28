@@ -16,47 +16,70 @@ import {color, fonts, sizes} from '../../shared-components/helper';
 import FormButton from '../../shared-components/button/form-button';
 import Input from '../../shared-components/input/input';
 import {setUserToken} from '../../utils/token-manager';
+import database from '@react-native-firebase/database';
 
-const loginSchema = yup.object({
+const signupSchema = yup.object({
+    full_name: yup.string().required('Please Enter Your Full Name.'),
     username: yup
         .string()
-        .required('Email or Phone number is required')
+        .required('Email address is required')
+        .email('Please enter valid email')
         .matches(
             /^[a-zA-Z0-9@_.-]*$/,
             'Sorry, only letters (a-z), number (0-9), and periods (.) are allowed',
         ),
+    phone_no: yup
+        .string()
+        .required('Phone Number is Required')
+        .matches(/^[0-9]*$/, 'Only Numbers are allowed')
+        .min(11, 'Invalid contact number')
+        .max(11, 'Invalid contact number'),
     password: yup.string().required('Password is required'),
 });
 
-const Login = ({navigation}) => {
+const Signup = ({navigation}) => {
     const {user, dispatchUser} = useContext(UserContext);
     const formik = useFormik({
         initialValues: {
+            full_name: '',
             username: '',
             password: '',
         },
-        // validationSchema: loginSchema,
+        validationSchema: signupSchema,
         onSubmit: values => {
-            onLogin(values);
+            onSignup(values);
         },
     });
 
     const headerOptions = {
         heading: 'ACSEC',
-        subHeading: 'Please login to your account to record your activities.',
+        subHeading: 'Create Your Account to record your activities.',
     };
 
-    const onLogin = () => {
-        setUserToken({
-            username: formik.values.username,
-            password: formik.values.password,
-        });
-        dispatchUser({
-            type: 'SET_USER',
-            user: {
-                loggedIn: true,
-            },
-        });
+    const onSignup = () => {
+        console.log(formik.values.username);
+        database()
+            .ref(`/users/${formik.values.phone_no}`)
+            .set({
+                full_name: formik.values.full_name,
+                email: formik.values.username,
+                password: formik.values.password,
+            })
+            .then(() => {
+                setUserToken({
+                    full_name: formik.values.full_name,
+                    username: formik.values.username,
+                    password: formik.values.password,
+                });
+                dispatchUser({
+                    type: 'SET_USER',
+                    user: {
+                        loggedIn: true,
+                        full_name: formik.values.formik,
+                        email: formik.values.email,
+                    },
+                });
+            });
     };
 
     return (
@@ -71,8 +94,32 @@ const Login = ({navigation}) => {
                         {/* Login Form Fields */}
                         <LoginForm>
                             <Input
-                                placeholder="Enter your email or phone"
-                                label="Email or Phone"
+                                placeholder="Enter your Full Name"
+                                label="Full Name"
+                                value={formik.values.full_name}
+                                onValueChange={value =>
+                                    formik.setFieldValue('full_name', value)
+                                }
+                                errorText={
+                                    formik.touched.full_name &&
+                                    formik.errors.full_name
+                                }
+                            />
+                            <Input
+                                placeholder="Enter your Phone Number"
+                                label="Phone Number"
+                                value={formik.values.phone_no}
+                                onValueChange={value =>
+                                    formik.setFieldValue('phone_no', value)
+                                }
+                                errorText={
+                                    formik.touched.phone_no &&
+                                    formik.errors.phone_no
+                                }
+                            />
+                            <Input
+                                placeholder="Enter your email"
+                                label="Email"
                                 value={formik.values.username}
                                 onValueChange={value =>
                                     formik.setFieldValue('username', value)
@@ -99,13 +146,13 @@ const Login = ({navigation}) => {
 
                         {/* Already Have Account */}
                         <JoinNow>
-                            <JoinNowText>Don’t have an account?</JoinNowText>
+                            <JoinNowText>Already have an account?</JoinNowText>
                             <TouchableOpacity
                                 onPress={() => [
-                                    navigation.navigate('Signup'),
+                                    navigation.navigate('Login'),
                                     formik.resetForm(),
                                 ]}>
-                                <JoinNowBtnTxt>Join Now</JoinNowBtnTxt>
+                                <JoinNowBtnTxt>Login</JoinNowBtnTxt>
                             </TouchableOpacity>
                         </JoinNow>
                     </View>
@@ -115,7 +162,7 @@ const Login = ({navigation}) => {
                 <Layout noScroll footer bgColor={color.white}>
                     <FooterBtnWrap>
                         <FormButton
-                            btnText="Login"
+                            btnText="Create Account"
                             btnWidth="100%"
                             onClick={formik.handleSubmit}
                         />
@@ -160,4 +207,4 @@ const JoinNowBtnTxt = styled.Text`
     margin-left: ${wp('1%')}px;
 `;
 
-export default Login;
+export default Signup;

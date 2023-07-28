@@ -36,12 +36,32 @@ const App = () => {
         }
     };
 
+    const getUserToken = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@authToken');
+            const res = jsonValue != null ? JSON.parse(jsonValue) : null;
+            if (res && Object.keys(res).length !== 0) {
+                dispatchUser({
+                    type: 'SET_USER',
+                    user: {
+                        username: res.username,
+                        password: res.password,
+                        loggedIn: true,
+                    },
+                });
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     useEffect(() => {
         getStartedToken();
         setTimeout(() => {
             setLoading(false);
             SplashScreen.hide();
         }, 3000);
+        getUserToken();
     }, []);
 
     return (

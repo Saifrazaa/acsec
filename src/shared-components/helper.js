@@ -173,21 +173,4 @@ export const phoneMask = [
     /\d/,
 ];
 
-export const apiUrl = 'https://www.talentibex.com';
-
 export const token = 'b2cc0dac00380a6bdd1ac090bc1e60fb';
-
-// export const pinchFetch = (url, data) => {
-//   return pinch
-//     .fetch(`${url}?${new URLSearchParams(data).toString()}`, {
-//       method: 'POST',
-//       sslPinning: {
-//         cert: 'talentibexcert',
-//       },
-//     })
-//     .then(response => response.json())
-//     .then(responseData => {
-//       return responseData;
-//     })
-//     .catch(error => console.warn(error));
-// };
