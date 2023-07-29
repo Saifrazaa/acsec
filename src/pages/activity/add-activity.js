@@ -11,6 +11,7 @@ import * as yup from 'yup';
 import database from '@react-native-firebase/database';
 import {UserContext} from '../../context/user';
 import CustSelect from '../../shared-components/select/select';
+import moment from 'moment';
 
 const activitySchema = yup.object({
     activity: yup.string().required('Activity Detail is required.'),
@@ -35,11 +36,15 @@ const AddActivity = () => {
 
     const onAddActivity = () => {
         database()
-            .ref(`/activities/${user.phone_no}`)
+            .ref(
+                `/activities/${user.phone_no}/${moment(
+                    formik.values.date,
+                ).format('ll')}`,
+            )
             .push({
                 activity: formik.values.activity,
                 completed: false,
-                date: formik.values.date.toString(),
+                date: moment(formik.values.date).format('ll'),
                 type: formik.values.type,
             })
             .then(() => {

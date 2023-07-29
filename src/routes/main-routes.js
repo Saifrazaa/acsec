@@ -13,6 +13,8 @@ import Logout from '../pages/auth/logout';
 import Signup from '../pages/auth/signup';
 import AddActivity from '../pages/activity/add-activity';
 import Graph from '../pages/graph/graph';
+import Calendar from '../pages/calender/calendar';
+import CalendarSchedule from '../pages/calender/calendar';
 
 // stack for non-logged in users
 const AuthStack = createStackNavigator();
@@ -50,6 +52,7 @@ export function AppRoute({}) {
     return (
         <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={Home} />
+            <Drawer.Screen name="Calendar" component={CalendarSchedule} />
             <Drawer.Screen name="Settings" component={Home} />
             <Drawer.Screen name="AddActivity" component={AddActivity} />
             <Drawer.Screen name="Graph" component={Graph} />

@@ -38,15 +38,7 @@ const CustDatePicker = ({
                             onCancel={() => {
                                 setOpen(false);
                             }}
-                            maximumDate={
-                                isDob
-                                    ? new Date(
-                                          moment()
-                                              .subtract(18, 'years')
-                                              .calendar(),
-                                      )
-                                    : new Date()
-                            }
+                            minimumDate={new Date()}
                         />
                     </DateWrapper>
 

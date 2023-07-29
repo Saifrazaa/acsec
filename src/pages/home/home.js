@@ -20,7 +20,11 @@ const Home = ({navigation}) => {
 
     useEffect(() => {
         database()
-            .ref(`activities/${user.phone_no}`)
+            .ref(
+                `activities/${user.phone_no}/${moment(new Date()).format(
+                    'll',
+                )}`,
+            )
             .once('value')
             .then(snapshot => {
                 const arr = [];
@@ -37,9 +41,12 @@ const Home = ({navigation}) => {
     return (
         <>
             <Layout withHeader headerOptions={headerOptions}>
-                <Heading>Today's Activities:</Heading>
+                {activities?.length > 0 && (
+                    <Heading>Today's Activities:</Heading>
+                )}
                 <ListWrapper>
                     {activities &&
+                        activities.length > 0 &&
                         activities.map((item, index) => {
                             return (
                                 <ListItem key={index}>
@@ -79,6 +86,14 @@ const Home = ({navigation}) => {
                             );
                         })}
                 </ListWrapper>
+                {(!activities || activities.length === 0) && (
+                    <NotFoundWrapper>
+                        <NotFound>No Activity For Today</NotFound>
+                        <NotFoundImage
+                            source={require('../../assets/images/not-found.png')}
+                        />
+                    </NotFoundWrapper>
+                )}
             </Layout>
             <Layout noScroll footer bgColor={color.white}>
                 <FooterBtnWrap>
@@ -134,6 +149,23 @@ const FooterBtnWrap = styled.View`
     flex-direction: ${props => (props.last ? 'column' : 'row')};
     ${props => (props.last ? `height: ${wp('32%')}px` : `height: auto`)};
     justify-content: space-between;
+`;
+
+const NotFoundWrapper = styled.View`
+    justify-content: center;
+    align-items: center;
+`;
+
+const NotFound = styled.Text`
+    font-size: ${sizes.font20};
+    color: ${color.primary};
+    font-family: ${fonts.GilroySemiBold};
+`;
+
+const NotFoundImage = styled.Image`
+    width: 300px;
+    height: 300px;
+    resize-mode: contain;
 `;
 
 export default Home;

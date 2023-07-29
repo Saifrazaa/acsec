@@ -33,12 +33,14 @@ const Graph = () => {
                 var inComData = 0;
                 const arr = [];
                 snapshot.forEach(activity => {
-                    arr.push(activity);
-                    if (activity.val().completed) {
-                        comData += 1;
-                    } else {
-                        inComData += 1;
-                    }
+                    activity.forEach(data => {
+                        arr.push(data);
+                        if (data.val().completed) {
+                            comData += 1;
+                        } else {
+                            inComData += 1;
+                        }
+                    });
                 });
                 setCompPerc(((comData * 100) / arr.length).toFixed(2));
                 setInComPerc(((inComData * 100) / arr.length).toFixed(2));
