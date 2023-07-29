@@ -19,6 +19,7 @@ const Graph = () => {
     const [inComPerc, setInComPerc] = useState(0);
     const [inCompleted, setInCompleted] = useState(10);
     const {user} = useContext(UserContext);
+    const [refreshing, setRefreshing] = useState(false);
 
     const widthAndHeight = 250;
     const series = [completed, inCompleted];

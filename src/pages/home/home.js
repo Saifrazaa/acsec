@@ -8,6 +8,8 @@ import {color, fonts, sizes} from '../../shared-components/helper';
 import database from '@react-native-firebase/database';
 import {UserContext} from '../../context/user';
 import moment from 'moment';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import CheckBox from '@react-native-community/checkbox';
 
 const Home = ({navigation}) => {
     const [activities, setActivities] = useState([]);
@@ -38,6 +40,35 @@ const Home = ({navigation}) => {
                 setActivities(arr);
             });
     }, []);
+    const handleCheckbox = (index, newVal, key) => {
+        const item = [...activities];
+        const data = {
+            ...item[index],
+            completed: newVal,
+        };
+        item[index]['completed'] = newVal;
+        setActivities(item);
+        database()
+            .ref(
+                `activities/${user.phone_no}/${moment(new Date()).format(
+                    'll',
+                )}/${key}`,
+            )
+            .set(data);
+    };
+
+    const deleteActivity = key => {
+        const items = activities.filter(data => data.key !== key);
+        setActivities(items);
+        database()
+            .ref(
+                `activities/${user.phone_no}/${moment(new Date()).format(
+                    'll',
+                )}/${key}`,
+            )
+            .remove();
+    };
+
     return (
         <>
             <Layout withHeader headerOptions={headerOptions}>
@@ -50,9 +81,32 @@ const Home = ({navigation}) => {
                         activities.map((item, index) => {
                             return (
                                 <ListItem key={index}>
-                                    <View>
-                                        <Label>{item?.activity}</Label>
-                                        <Status>
+                                    <CheckBox
+                                        disabled={false}
+                                        value={item.completed}
+                                        onValueChange={newValue =>
+                                            handleCheckbox(
+                                                index,
+                                                newValue,
+                                                item.key,
+                                            )
+                                        }
+                                        tintColors={{
+                                            true: user.darkMode
+                                                ? color.black
+                                                : color.primary,
+                                        }}
+                                    />
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            marginLeft: 10,
+                                            maxWidth: '70%',
+                                        }}>
+                                        <Label completed={item.completed}>
+                                            {item?.activity}
+                                        </Label>
+                                        <Status completed={item.completed}>
                                             Status:{' '}
                                             <Text
                                                 style={{
@@ -64,7 +118,7 @@ const Home = ({navigation}) => {
                                                     : 'In-Complete'}
                                             </Text>
                                         </Status>
-                                        <Status>
+                                        <Status completed={item.completed}>
                                             Type:{' '}
                                             <Text
                                                 style={{
@@ -76,6 +130,19 @@ const Home = ({navigation}) => {
                                         </Status>
                                     </View>
                                     <View>
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                deleteActivity(item.key)
+                                            }>
+                                            <Text
+                                                style={{
+                                                    color: color.danger,
+                                                    fontFamily:
+                                                        fonts.GilroyBold,
+                                                }}>
+                                                Delete
+                                            </Text>
+                                        </TouchableOpacity>
                                         <CompletionDate>
                                             <Status>
                                                 {moment(item.date).format('ll')}
@@ -119,6 +186,13 @@ const ListWrapper = styled.View`
     padding: ${wp('5%')}px;
 `;
 
+const Label = styled.Text`
+    font-family: ${fonts.GilroySemiBold};
+    font-size: ${sizes.font14};
+    color: ${color.black};
+    text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
+`;
+
 const ListItem = styled.View`
     margin-bottom: ${wp('5%')}px;
     border-bottom-width: 1px;
@@ -127,20 +201,15 @@ const ListItem = styled.View`
     padding-left: ${wp('1%')}px;
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     background-color: ${color.white['100']};
-`;
-
-const Label = styled.Text`
-    font-family: ${fonts.GilroySemiBold};
-    font-size: ${sizes.font14};
-    color: ${color.black};
 `;
 
 const Status = styled.Text`
     font-family: ${fonts.GilroyMedium};
     font-size: ${sizes.font13};
     color: ${color.primary};
+    text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
 `;
 
 const CompletionDate = styled.View``;

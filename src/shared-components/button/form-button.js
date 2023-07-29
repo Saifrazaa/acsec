@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import styled from 'styled-components';
 import {color, fonts, sizes} from '../helper';
 import Icon from 'react-native-fontawesome-pro';
+import {UserContext} from '../../context/user';
 
 const FormButton = ({
     btnText,
@@ -17,8 +18,11 @@ const FormButton = ({
     iconSize,
     btnBorder,
 }) => {
+    const {user} = useContext(UserContext);
+
     return (
         <ButtonBg
+            darkMode={user.darkMode}
             activeOpacity={0.8}
             onPress={onClick}
             borderColor={borderColor}
@@ -43,7 +47,8 @@ const FormBtnText = styled.Text`
     font-family: ${fonts.GilroyBold};
 `;
 const ButtonBg = styled.TouchableOpacity`
-    background-color: ${color.primary};
+    background-color: ${props =>
+        props.darkMode ? color.black : color.primary};
     width: ${props => (props.btnWidth ? props.btnWidth : 'auto')};
     height: ${props => (props.btnHeight ? props.btnHeight : `${wp('15%')}px`)};
     justify-content: center;

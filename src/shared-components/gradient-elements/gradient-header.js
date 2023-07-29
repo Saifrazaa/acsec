@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from 'styled-components';
 import {
     widthPercentageToDP as wp,
@@ -6,6 +6,7 @@ import {
 } from 'react-native-responsive-screen';
 import {Platform} from 'react-native';
 import {color} from '../helper';
+import {UserContext} from '../../context/user';
 
 const Header = ({
     children,
@@ -15,8 +16,10 @@ const Header = ({
     noOverlay,
     noSkew,
 }) => {
+    const {user} = useContext(UserContext);
     return (
         <Wrapper
+            darkMode={user.darkMode}
             noSkew={noSkew}
             noBorder={noBorder}
             noMarginBottom={noMarginBottom}>
@@ -36,7 +39,8 @@ const Header = ({
 const Wrapper = styled.View`
     width: 100%;
     overflow: hidden;
-    background-color: ${color.primary};
+    background-color: ${props =>
+        props.darkMode ? color.black : color.primary};
     margin-bottom: 20px;
     padding-top: 20px;
 `;

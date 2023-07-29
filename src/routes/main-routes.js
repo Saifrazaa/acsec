@@ -15,6 +15,7 @@ import AddActivity from '../pages/activity/add-activity';
 import Graph from '../pages/graph/graph';
 import Calendar from '../pages/calender/calendar';
 import CalendarSchedule from '../pages/calender/calendar';
+import Settings from '../pages/settings/settings';
 
 // stack for non-logged in users
 const AuthStack = createStackNavigator();
@@ -50,10 +51,14 @@ export function Auth({isNew}) {
 
 export function AppRoute({}) {
     return (
-        <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+                unmountOnBlur: true,
+            }}>
             <Drawer.Screen name="Home" component={Home} />
             <Drawer.Screen name="Calendar" component={CalendarSchedule} />
-            <Drawer.Screen name="Settings" component={Home} />
+            <Drawer.Screen name="Settings" component={Settings} />
             <Drawer.Screen name="AddActivity" component={AddActivity} />
             <Drawer.Screen name="Graph" component={Graph} />
             <Drawer.Screen name="Logout" component={Logout} />
