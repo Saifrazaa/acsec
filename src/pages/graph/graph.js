@@ -19,7 +19,7 @@ const Graph = () => {
     const [inComPerc, setInComPerc] = useState(0);
     const [inCompleted, setInCompleted] = useState(10);
     const {user} = useContext(UserContext);
-    const [refreshing, setRefreshing] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const widthAndHeight = 250;
     const series = [completed, inCompleted];
@@ -30,46 +30,62 @@ const Graph = () => {
             .ref(`activities/${user.phone_no}`)
             .once('value')
             .then(snapshot => {
-                var comData = 0;
-                var inComData = 0;
-                const arr = [];
-                snapshot.forEach(activity => {
-                    activity.forEach(data => {
-                        arr.push(data);
-                        if (data.val().completed) {
-                            comData += 1;
-                        } else {
-                            inComData += 1;
-                        }
+                setLoading(false);
+                if (snapshot) {
+                    var comData = 0;
+                    var inComData = 0;
+                    const arr = [];
+                    snapshot.forEach(activity => {
+                        activity.forEach(data => {
+                            arr.push(data);
+                            if (data.val().completed) {
+                                comData += 1;
+                            } else {
+                                inComData += 1;
+                            }
+                        });
                     });
-                });
-                setCompPerc(((comData * 100) / arr.length).toFixed(2));
-                setInComPerc(((inComData * 100) / arr.length).toFixed(2));
-                setCompleted(comData);
-                setInCompleted(inComData);
+                    setCompPerc(((comData * 100) / arr.length).toFixed(2));
+                    setInComPerc(((inComData * 100) / arr.length).toFixed(2));
+                    setCompleted(comData);
+                    setInCompleted(inComData);
+                }
             });
     }, []);
-
     return (
         <>
             <Layout withHeader headerOptions={headerOptions}>
                 <Wrapper>
-                    <StatusWrapper>
-                        <StatusWrap>
-                            <Circle bgColor={'#FFC154'} />
-                            <Label>Completed ({compPerc + '%'})</Label>
-                        </StatusWrap>
-                        <StatusWrap>
-                            <Circle bgColor={'#47B39C'} />
-                            <Label>In-Complete ({inComPerc + '%'})</Label>
-                        </StatusWrap>
-                    </StatusWrapper>
-                    <PieChart
-                        widthAndHeight={widthAndHeight}
-                        series={series}
-                        sliceColor={sliceColor}
-                    />
+                    {!loading && !(completed === 0 && inCompleted === 0) && (
+                        <>
+                            <StatusWrapper>
+                                <StatusWrap>
+                                    <Circle bgColor={'#FFC154'} />
+                                    <Label>Completed ({compPerc + '%'})</Label>
+                                </StatusWrap>
+                                <StatusWrap>
+                                    <Circle bgColor={'#47B39C'} />
+                                    <Label>
+                                        In-Complete ({inComPerc + '%'})
+                                    </Label>
+                                </StatusWrap>
+                            </StatusWrapper>
+                            <PieChart
+                                widthAndHeight={widthAndHeight}
+                                series={series}
+                                sliceColor={sliceColor}
+                            />
+                        </>
+                    )}
                 </Wrapper>
+                {!loading && completed === 0 && inCompleted === 0 && (
+                    <NotFoundWrapper>
+                        <NotFound>No Activities Found</NotFound>
+                        <NotFoundImage
+                            source={require('../../assets/images/not-found.png')}
+                        />
+                    </NotFoundWrapper>
+                )}
             </Layout>
         </>
     );
@@ -103,6 +119,23 @@ const Label = styled.Text`
     font-size: ${sizes.font18};
     font-family: ${fonts.GilroySemiBold};
     color: ${color.black};
+`;
+
+const NotFoundWrapper = styled.View`
+    justify-content: center;
+    align-items: center;
+`;
+
+const NotFound = styled.Text`
+    font-size: ${sizes.font20};
+    color: ${color.primary};
+    font-family: ${fonts.GilroySemiBold};
+`;
+
+const NotFoundImage = styled.Image`
+    width: 300px;
+    height: 300px;
+    resize-mode: contain;
 `;
 
 export default Graph;
